@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiberProx - Proxy Manager Ditressiber Polda Jatim</title>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- favicon -->
+    <link rel="icon" href="assets/images/favicon.ico">
+    <style>
+        body { user-select: none; -webkit-user-select: none; }
+        @keyframes cursor-blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        #typing-text::after {
+            content: '|';
+            margin-left: 2px;
+            animation: cursor-blink 1s infinite;
+            color: currentColor;
+        }
+
+        .glitch {
+            position: relative;
+            text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff,
+                         0.025em 0.04em 0 #fffc00;
+            animation: glitch 725ms infinite;
+        }
+
+        @keyframes glitch {
+            0% {
+                text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff,
+                             0.025em 0.04em 0 #fffc00;
+            }
+            15% {
+                text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff,
+                             0.025em 0.04em 0 #fffc00;
+            }
+            16% {
+                text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff,
+                             -0.05em -0.05em 0 #fffc00;
+            }
+            49% {
+                text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff,
+                             -0.05em -0.05em 0 #fffc00;
+            }
+            50% {
+                text-shadow: 0.05em 0.035em 0 #00fffc, 0.03em 0 0 #fc00ff,
+                             0 -0.04em 0 #fffc00;
+            }
+            99% {
+                text-shadow: 0.05em 0.035em 0 #00fffc, 0.03em 0 0 #fc00ff,
+                             0 -0.04em 0 #fffc00;
+            }
+            100% {
+                text-shadow: -0.05em 0 0 #00fffc, -0.025em -0.04em 0 #fc00ff,
+                             -0.04em -0.025em 0 #fffc00;
+            }
+        }
+    </style>
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+    <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div class="px-3 py-3 lg:px-5 lg:pl-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start rtl:justify-end">
+                    <img src="assets/images/logo-siber-polri.png" class="h-8 me-3" alt="Logo" />
+                    <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
+                        SiberProx - <span id="typing-text" class="text-white dark:text-white"></span>
+                    </span>
+                </div>
+                <!-- informasi versi taruh di samping kanan -->
+                <div class="flex items-center justify-end">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                        Versi 1.2.0
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="p-4 mt-10">
+        <!-- Widgets Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-6">
+            <!-- Total Devices Widget -->
+            <!-- <div class="p-4 bg-white rounded-lg shadow-sm dark:bg-gray-800">
+                <div class="flex items-center">
+                    <div class="inline-flex flex-shrink-0 justify-center items-center w-12 h-12 text-blue-600 bg-blue-100 rounded-lg dark:bg-blue-900 dark:text-blue-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Device Terhubung</h3>
+                        <p id="total-devices" class="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Total Proxies Widget -->
+            <!-- <div class="p-4 bg-white rounded-lg shadow-sm dark:bg-gray-800">
+                <div class="flex items-center">
+                    <div class="inline-flex flex-shrink-0 justify-center items-center w-12 h-12 text-green-600 bg-green-100 rounded-lg dark:bg-green-900 dark:text-green-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Total Proxy</h3>
+                        <p id="total-proxies" class="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Upload Speed Widget -->
+            <div class="p-4 bg-white rounded-lg shadow-sm dark:bg-gray-800">
+                <div class="flex items-center">
+                    <div class="inline-flex flex-shrink-0 justify-center items-center w-12 h-12 text-purple-600 bg-purple-100 rounded-lg dark:bg-purple-900 dark:text-purple-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">Upload Speed</h3>
+                        <p id="upload-speed" class="text-2xl font-bold text-gray-900 dark:text-white">0 B/s</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Download Speed Widget -->
+            <div class="p-4 bg-white rounded-lg shadow-sm dark:bg-gray-800">
+                <div class="flex items-center">
+                    <div class="inline-flex flex-shrink-0 justify-center items-center w-12 h-12 text-orange-600 bg-orange-100 rounded-lg dark:bg-orange-900 dark:text-orange-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">Download Speed</h3>
+                        <p id="download-speed" class="text-2xl font-bold text-gray-900 dark:text-white">0 B/s</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Container -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Upload Chart -->
+            <div class="bg-white rounded-lg p-4 dark:bg-gray-800 overflow-hidden">
+                <h3 class="text-sm font-medium mb-2 text-gray-900 dark:text-white">Upload Chart</h3>
+                <div id="upload-chart" class="w-full h-[200px]"></div>
+            </div>
+            
+            <!-- Download Chart -->
+            <div class="bg-white rounded-lg p-4 dark:bg-gray-800 overflow-hidden">
+                <h3 class="text-sm font-medium mb-2 text-gray-900 dark:text-white">Download Chart</h3>
+                <div id="download-chart" class="w-full h-[200px]"></div>
+            </div>
+        </div>
+    </div>
+    <!-- buat grid 2 kolom -->
+    <div class="p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+                <!-- Device Terhubung -->
+                <div class="grid grid-cols-1 gap-4 mb-4">
+                    <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Device Terhubung</h3>
+                            <span id="device-count" class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">0</span>
+                        </div>
+                        <div class="relative overflow-x-auto max-h-[300px] overflow-y-auto">
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table-auto overflow-y-auto h-[500px]">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">No</th>
+                                        <th scope="col" class="px-6 py-3">Model</th>
+                                        <th scope="col" class="px-6 py-3">Device ID</th>
+                                        <th scope="col" class="px-6 py-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="devices-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="grid grid-cols-1 gap-4 mb-4">
+                    <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-4">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Proxy Tersedia</h3>
+                                
+                            </div>
+                            <span id="proxy-count" class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">0</span>
+                        </div>
+                        <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                            <div class="flex items-center gap-2">
+                                <select id="status-filter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="all">Semua Proxy</option>
+                                    <option value="Assigned">Terpakai</option>
+                                    <option value="Unassigned">Belum Terpakai</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="showAddProxiesDialog()" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
+                                    <svg class="w-4 h-4 me-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                    Tambah Proxy
+                                </button>
+                                <button onclick="deleteSelectedProxies()" id="delete-selected" disabled class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                                    <svg class="w-4 h-4 me-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                    Hapus Terpilih
+                                </button>
+                                <button onclick="deleteAllProxies()" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                                    <svg class="w-4 h-4 me-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                    Hapus Semua
+                                </button>
+                            </div>
+                        </div>
+                        <div class="relative overflow-x-auto max-h-[300px] overflow-y-scroll">
+                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 table-auto overflow-y-scroll h-[500px]">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            <input type="checkbox" id="checkbox-all" class="w-4 h-4">
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">No</th>
+                                        <th scope="col" class="px-6 py-3">Proxy</th>
+                                        <th scope="col" class="px-6 py-3">Status</th>
+                                        <th scope="col" class="px-6 py-3">Device</th>
+                                        <th scope="col" class="px-6 py-3">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="proxies-list">
+                                    <!-- Proxy list will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Buttons Container dengan Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-4 mb-8">
+                    <div class="flex justify-center">
+                        <button onclick="refreshDevices()" type="button" class="w-full text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">
+                            <svg class="w-4 h-4 me-2 inline" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 1v5h-5M2 19v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97"/>
+                            </svg>
+                            Refresh Devices
+                        </button>
+                    </div>
+                    <div class="flex justify-center">
+                        <button onclick="bulkAssignProxies()" type="button" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                            <svg class="w-4 h-4 me-2 inline" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
+                            </svg>
+                            Assign Bulk Proxies
+                        </button>
+                    </div>
+                    <div class="flex justify-center">
+                        <button onclick="unassignAllProxies()" class="w-full text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-yellow-600 dark:hover:bg-yellow-700 focus:outline-none dark:focus:ring-yellow-800">
+                            <svg class="w-4 h-4 me-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Unassign Semua
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tambahkan sebelum footer -->
+            <div>
+                <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden">
+                    <div class="flex items-center justify-between p-4 border-b border-gray-800 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+                        <h3 class="text-lg font-semibold text-white">System Logs</h3>
+                        <div class="flex space-x-2">
+                            <button onclick="clearLogs()" class="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
+                                Clear
+                            </button>
+                            <button onclick="refreshLogs()" class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                Refresh
+                            </button>
+                            <button onclick="toggleAutoScroll()" id="auto-scroll-btn" class="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+                                Auto-scroll ON
+                            </button>
+                        </div>
+                    </div>
+                    <div id="log-container" class="h-[840px] overflow-y-auto font-mono text-sm p-4" style="background-color: #1a1a1a;">
+                        <div id="log-content" class="whitespace-pre-wrap"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="fixed bottom-0 left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 dark:border-gray-600">
+        <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+            SiberProx - Proxy Manager Ditressiber Polda Jatim
+        </span>
+        <span class="flex items-center mt-3 text-sm text-gray-500 dark:text-gray-400 sm:mt-0">
+            Developed with 
+            <svg class="w-4 h-4 text-red-500 mx-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+            </svg>
+            by Evan Helga
+        </span>
+    </footer>
+
+    <!-- Tambahkan margin bottom untuk content agar tidak tertutup footer -->
+    <div class="pb-20"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <script>
+        let devices = [];
+        let proxies = [];
+        let selectedProxies = new Set();
+
+        // Initialize charts
+        let uploadChart, downloadChart;
+        const maxDataPoints = 20;
+        const uploadData = Array(maxDataPoints).fill(0);
+        const downloadData = Array(maxDataPoints).fill(0);
+
+        function initializeCharts() {
+            const chartOptions = {
+                type: 'line',
+                height: '100%',
+                width: '100%',
+                sparkline: {
+                    enabled: true
+                },
+                animations: {
+                    enabled: true,
+                    easing: 'linear',
+                    dynamicAnimation: {
+                        speed: 1000
+                    }
+                }
+            };
+
+            // Upload Chart
+            uploadChart = new ApexCharts(document.querySelector("#upload-chart"), {
+                ...chartOptions,
+                series: [{
+                    data: uploadData
+                }]
+            });
+            uploadChart.render();
+
+            // Download Chart (Orange color)
+            downloadChart = new ApexCharts(document.querySelector("#download-chart"), {
+                ...chartOptions,
+                colors: ['#EA580C'], // Orange for download
+                series: [{
+                    data: downloadData
+                }]
+            });
+            downloadChart.render();
+        }
+
+        // Update device and proxy counts
+        function updateCounts() {
+            // document.getElementById('total-devices').textContent = devices.length;
+            // document.getElementById('total-proxies').textContent = proxies.length;
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            updateCounts();
+            
+            // Update counts every 5 seconds
+            setInterval(updateCounts, 5000);
+        });
+
+        function showMessage(message, type = 'success') {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            const iconColors = {
+                success: '#10B981', // Green
+                error: '#EF4444',   // Red
+                warning: '#F59E0B', // Yellow
+                info: '#3B82F6'     // Blue
+            };
+
+            Toast.fire({
+                icon: type,
+                title: message,
+                background: type === 'success' ? '#F0FDF4' : '#FEF2F2',
+                color: type === 'success' ? '#065F46' : '#991B1B',
+                iconColor: iconColors[type]
+            });
+        }
+
+        // Tambahkan variable global
+        let isManualRefresh = false;
+
+        // Update fungsi click handler
+        function initializeRefreshButton() {
+            const refreshBtn = document.getElementById('refresh-devices');
+            if (refreshBtn) {
+                refreshBtn.onclick = () => {
+                    isManualRefresh = true;  // Set flag saat manual refresh
+                    refreshDevices();
+                };
+            }
+        }
+
+        // Update di akhir fungsi refreshDevices
+        async function refreshDevices() {
+            try {
+                if (isManualRefresh) {
+                    // Show loading alert
+                    Swal.fire({
+                        title: 'Memuat Device',
+                        text: 'Sedang mencari device yang terhubung...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                }
+
+                devices = await eel.get_connected_devices()();
+                const devicesList = document.getElementById('devices-list');
+                const deviceCount = document.getElementById('device-count');
+                
+                devicesList.innerHTML = '';
+                deviceCount.textContent = devices.length;
+
+                if (devices.length === 0) {
+                    devicesList.innerHTML = `
+                        <tr class="bg-white dark:bg-gray-800">
+                            <td colspan="4" class="px-6 py-4 text-center">Tidak ada device yang terhubung</td>
+                        </tr>`;
+                    return;
+                }
+
+                devices.forEach((device, index) => {
+                    devicesList.innerHTML += `
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td class="px-6 py-4">${index + 1}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <img src="assets/images/android.svg" class="w-6 h-6 me-2" alt="Android">
+                                    ${device.model}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">${device.id}</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                    Connected
+                                </span>
+                            </td>
+                        </tr>`;
+                });
+
+                // Di akhir fungsi, tampilkan alert hanya jika manual refresh
+                if (isManualRefresh) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Device Diperbarui',
+                        text: `Ditemukan ${devices.length} device yang terhubung`,
+                        timer: 2000,
+                        timerProgressBar: true
+                    });
+                    isManualRefresh = false;  // Reset flag
+                }
+            } catch (error) {
+                console.error('Error refreshing devices:', error);
+                if (isManualRefresh) {
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Gagal memuat daftar device: ' + error.message
+                    });
+                    isManualRefresh = false;  // Reset flag
+                }
+            }
+        }
+
+        // Filter proxies based on status
+        document.getElementById('status-filter').addEventListener('change', function() {
+            loadProxies();
+        });
+
+        // Fungsi untuk menambah proxy
+        async function showAddProxiesDialog() {
+            const result = await Swal.fire({
+                title: 'Tambah Proxy',
+                html: `
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                            Masukkan daftar proxy (satu per baris)<br>
+                            Format: host:port
+                        </label>
+                        <textarea id="proxy-list" rows="10" 
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="contoh:&#13;&#10;1.2.3.4:8080&#13;&#10;proxy.example.com:3128"></textarea>
+                    </div>
+                `,
+                customClass: {
+                    container: 'dark:bg-gray-800',
+                    popup: 'dark:bg-gray-800 dark:text-white',
+                    header: 'dark:bg-gray-800 dark:text-white',
+                    content: 'dark:bg-gray-800 dark:text-white',
+                    input: 'dark:bg-gray-700 dark:text-white',
+                    confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-600 dark:hover:bg-blue-700',
+                    cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white dark:bg-gray-600 dark:hover:bg-gray-700'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Tambah',
+                cancelButtonText: 'Batal',
+                preConfirm: () => {
+                    const proxyList = document.getElementById('proxy-list').value;
+                    return proxyList.split('\n')
+                        .map(proxy => proxy.trim())
+                        .filter(proxy => proxy !== '');
+                }
+            });
+
+            if (result.isConfirmed && result.value.length > 0) {
+                // Validate proxies
+                const invalidProxies = result.value.filter(proxy => !proxy.match(/^[a-zA-Z0-9.-]+:\d+$/));
+                if (invalidProxies.length > 0) {
+                    await Swal.fire({
+                        title: 'Format Proxy Tidak Valid',
+                        html: `Proxy berikut memiliki format yang tidak valid:<br><br>
+                              <code class="text-red-500">${invalidProxies.join('<br>')}</code><br><br>
+                              Gunakan format: host:port`,
+                        icon: 'error'
+                    });
+                    return;
+                }
+
+                const success = await eel.add_proxies(result.value)();
+                if (success) {
+                    showMessage('Proxy berhasil ditambahkan');
+                    await loadProxies();
+                } else {
+                    showMessage('Gagal menambahkan proxy', 'error');
+                }
+            }
+        }
+
+        // Fungsi untuk update total proxy di widget
+        // async function updateTotalProxies() {
+        //     try {
+        //         const proxies = await eel.get_proxies()();
+        //         const totalProxiesWidget = document.getElementById('total-proxies');
+        //         const proxyCountBadge = document.getElementById('proxy-count');
+                
+        //         if (totalProxiesWidget) {
+        //             totalProxiesWidget.textContent = proxies.length;
+        //         }
+                
+        //         if (proxyCountBadge) {
+        //             proxyCountBadge.textContent = proxies.length;
+        //         }
+        //     } catch (error) {
+        //         console.error('Error updating total proxies:', error);
+        //     }
+        // }
+
+        async function addProxies(proxies) {
+            try {
+                // Show loading state
+                Swal.fire({
+                    title: 'Menambahkan Proxy',
+                    text: 'Mohon tunggu...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                const success = await eel.add_proxies(proxies)();
+                
+                await Swal.close();
+
+                if (success) {
+                    showMessage('Proxy berhasil ditambahkan');
+                    await loadProxies();
+                    // await updateTotalProxies();
+                } else {
+                    showMessage('Gagal menambahkan proxy', 'error');
+                }
+            } catch (error) {
+                console.error('Error adding proxies:', error);
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+
+        // Fungsi untuk memuat dan menampilkan daftar proxy
+        async function loadProxies() {
+            try {
+                const proxyList = await eel.load_proxies()();
+                const assignments = await eel.get_assignments()();
+                const proxiesList = document.getElementById('proxies-list');
+                const statusFilter = document.getElementById('status-filter').value;
+                const proxyCount = document.getElementById('proxy-count');
+                
+                if (!proxiesList) return;
+                
+                proxiesList.innerHTML = '';
+                
+                if (!proxyList || proxyList.length === 0) {
+                    proxiesList.innerHTML = `
+                        <tr class="bg-white dark:bg-gray-800">
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                Tidak ada proxy tersedia
+                            </td>
+                        </tr>`;
+                    if (proxyCount) proxyCount.textContent = '0';
+                    return;
+                }
+
+                // Filter proxies berdasarkan status
+                const filteredProxies = proxyList.filter(proxy => {
+                    const isAssigned = assignments.hasOwnProperty(proxy);
+                    switch(statusFilter.toLowerCase()) {
+                        case 'assigned':
+                        case 'terpakai':
+                            return isAssigned;
+                        case 'unassigned':
+                        case 'belum terpakai':
+                            return !isAssigned;
+                        default: // 'all' atau 'semua proxy'
+                            return true;
+                    }
+                });
+
+                // Update proxy count
+                if (proxyCount) proxyCount.textContent = filteredProxies.length;
+                
+
+                if (filteredProxies.length === 0) {
+                    proxiesList.innerHTML = `
+                        <tr class="bg-white dark:bg-gray-800">
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                Tidak ada proxy dengan status yang dipilih
+                            </td>
+                        </tr>`;
+                    return;
+                }
+
+                filteredProxies.forEach((proxy, index) => {
+                    const assignment = assignments[proxy];
+                    const isAssigned = !!assignment;
+                    const deviceInfo = isAssigned ? `${assignment.device_model} (${assignment.device_id})` : 'Tidak ada';
+                    
+                    const row = `
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td class="w-4 p-4">
+                                <div class="flex items-center">
+                                    <input type="checkbox" class="proxy-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                        value="${proxy}" ${selectedProxies.has(proxy) ? 'checked' : ''}>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">${index + 1}</td>
+                            <td class="px-6 py-4">${proxy}</td>
+                            <td class="px-6 py-4">
+                                ${isAssigned ? 
+                                    `<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                        Terpakai
+                                    </span>` : 
+                                    `<span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
+                                        Belum Terpakai
+                                    </span>`
+                                }
+                            </td>
+                            <td class="px-6 py-4">${deviceInfo}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center space-x-2">
+                                    ${isAssigned ? 
+                                        `<button onclick="unassignProxy('${proxy}')" class="px-3 py-1 text-sm font-medium text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 focus:ring-4 focus:ring-yellow-300 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">
+                                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            Unassign
+                                        </button>` :
+                                        `<button onclick="showAssignDialog('${proxy}')" class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                            </svg>
+                                            Assign
+                                        </button>`
+                                    }
+                                    <button onclick="deleteProxy('${proxy}')" class="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                        Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>`;
+                    proxiesList.innerHTML += row;
+                });
+
+                // Reinitialize checkbox listeners
+                initializeCheckboxes();
+                // await updateTotalProxies();
+            } catch (error) {
+                console.error('Error loading proxies:', error);
+                showMessage('Error memuat daftar proxy', 'error');
+            }
+        }
+
+        // Add event listener for status filter
+        document.getElementById('status-filter').addEventListener('change', loadProxies);
+
+        function initializeCheckboxes() {
+            const checkboxAll = document.getElementById('checkbox-all');
+            const checkboxes = document.querySelectorAll('.proxy-checkbox');
+            const deleteSelectedBtn = document.getElementById('delete-selected');
+            const unassignSelectedBtn = document.getElementById('unassign-selected');
+
+            checkboxAll.addEventListener('change', function() {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                    if (this.checked) {
+                        selectedProxies.add(checkbox.value);
+                    } else {
+                        selectedProxies.delete(checkbox.value);
+                    }
+                });
+                updateButtonStates();
+            });
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        selectedProxies.add(this.value);
+                    } else {
+                        selectedProxies.delete(this.value);
+                    }
+                    updateButtonStates();
+                });
+            });
+        }
+
+        function updateButtonStates() {
+            const deleteSelectedBtn = document.getElementById('delete-selected');
+            const unassignSelectedBtn = document.getElementById('unassign-selected');
+            
+            if (!deleteSelectedBtn) return;
+            
+            const isDisabled = selectedProxies.size === 0;
+            deleteSelectedBtn.disabled = isDisabled;
+            
+            if (unassignSelectedBtn) {
+                unassignSelectedBtn.disabled = isDisabled;
+            }
+            
+            // Update button classes
+            const buttons = [deleteSelectedBtn, unassignSelectedBtn].filter(Boolean);
+            buttons.forEach(btn => {
+                if (isDisabled) {
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            });
+        }
+
+        async function showAssignDialog(proxy) {
+            try {
+                const devices = await eel.get_connected_devices()();
+                const availableDevices = devices.filter(d => d.status === 'device');
+
+                if (availableDevices.length === 0) {
+                    showMessage('Tidak ada device yang tersedia', 'error');
+                    return;
+                }
+
+                const { value: deviceId } = await Swal.fire({
+                    title: 'Pilih Device',
+                    input: 'select',
+                    inputOptions: Object.fromEntries(
+                        availableDevices.map(d => [d.id, `${d.model} (${d.id})`])
+                    ),
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Assign',
+                    cancelButtonText: 'Batal'
+                });
+
+                if (deviceId) {
+                    Swal.fire({
+                        title: 'Mengatur Proxy',
+                        text: 'Mohon tunggu...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    const [success, message] = await eel.assign_single_proxy(deviceId, proxy)();
+                    
+                    if (success) {
+                        showMessage('Berhasil mengatur proxy', 'success');
+                        await loadProxies();
+                    } else {
+                        showMessage(message || 'Gagal mengatur proxy', 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Error in assign dialog:', error);
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function bulkAssignProxies() {
+            try {
+                const result = await Swal.fire({
+                    title: 'Konfirmasi Bulk Assign',
+                    text: 'Assign proxy ke semua device yang tersedia?',
+                    icon: 'question',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Assign!',
+                    cancelButtonText: 'Batal'
+                });
+
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Sedang Mengatur Proxy',
+                        text: 'Mohon tunggu...',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    const [success, message] = await eel.bulk_assign_proxies()();
+                    
+                    await Swal.close();
+
+                    if (success) {
+                        showMessage(message);
+                        await loadProxies();
+                        await refreshDevices();
+                    } else {
+                        showMessage(message, 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Error in bulk assign:', error);
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteProxy(proxy) {
+            const result = await Swal.fire({
+                title: 'Hapus Proxy',
+                text: `Yakin ingin menghapus proxy ${proxy}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            });
+
+            if (result.isConfirmed) {
+                const success = await eel.delete_proxy(proxy)();
+                if (success) {
+                    showMessage('Proxy berhasil dihapus');
+                    selectedProxies.delete(proxy);
+                    await loadProxies();
+                } else {
+                    showMessage('Gagal menghapus proxy', 'error');
+                }
+            }
+        }
+
+        async function deleteSelectedProxies() {
+            const result = await Swal.fire({
+                title: 'Hapus Proxy Terpilih',
+                text: `Yakin ingin menghapus ${selectedProxies.size} proxy terpilih?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            });
+
+            if (result.isConfirmed) {
+                const success = await eel.delete_proxies(Array.from(selectedProxies))();
+                if (success) {
+                    showMessage('Proxy terpilih berhasil dihapus');
+                    selectedProxies.clear();
+                    await loadProxies();
+                } else {
+                    showMessage('Gagal menghapus proxy', 'error');
+                }
+            }
+        }
+
+        async function deleteAllProxies() {
+            const result = await Swal.fire({
+                title: 'Hapus Semua Proxy',
+                text: 'Yakin ingin menghapus semua proxy?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus Semua!',
+                cancelButtonText: 'Batal'
+            });
+
+            if (result.isConfirmed) {
+                const success = await eel.delete_all_proxies()();
+                if (success) {
+                    showMessage('Semua proxy berhasil dihapus');
+                    selectedProxies.clear();
+                    await loadProxies();
+                } else {
+                    showMessage('Gagal menghapus proxy', 'error');
+                }
+            }
+        }
+
+        async function unassignProxy(proxy) {
+            const result = await Swal.fire({
+                title: 'Unassign Proxy',
+                text: 'Yakin ingin menghapus assignment proxy ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Unassign!',
+                cancelButtonText: 'Batal'
+            });
+
+            if (result.isConfirmed) {
+                const success = await eel.unassign_proxy(proxy)();
+                if (success) {
+                    showMessage('Proxy berhasil di-unassign');
+                    await loadProxies();
+                } else {
+                    showMessage('Gagal meng-unassign proxy', 'error');
+                }
+            }
+        }
+
+        async function unassignSelectedProxies() {
+            if (selectedProxies.size === 0) {
+                showMessage('Tidak ada proxy yang dipilih', 'error');
+                return;
+            }
+
+            const result = await Swal.fire({
+                title: 'Unassign Proxies',
+                text: `Yakin ingin menghapus assignment ${selectedProxies.size} proxy?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Unassign!',
+                cancelButtonText: 'Batal'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const success = await eel.unassign_multiple_proxies(Array.from(selectedProxies))();
+                    if (success) {
+                        showMessage('Proxy berhasil di-unassign');
+                        selectedProxies.clear();
+                        await loadProxies();
+                    } else {
+                        showMessage('Gagal meng-unassign proxy', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error unassigning proxies:', error);
+                    showMessage('Terjadi kesalahan saat meng-unassign proxy', 'error');
+                }
+            }
+        }
+
+        async function unassignAllProxies() {
+            const result = await Swal.fire({
+                title: 'Unassign Semua Proxy',
+                text: 'Yakin ingin menghapus semua assignment proxy?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Unassign Semua!',
+                cancelButtonText: 'Batal'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const success = await eel.unassign_all_proxies()();
+                    if (success) {
+                        showMessage('Semua proxy berhasil di-unassign');
+                        selectedProxies.clear();
+                        await loadProxies();
+                    } else {
+                        showMessage('Gagal meng-unassign proxy', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error unassigning all proxies:', error);
+                    showMessage('Terjadi kesalahan saat meng-unassign semua proxy', 'error');
+                }
+            }
+        }
+
+        function typeWriter(text, element, delay = 100) {
+            let displayText = '';
+            let currentIndex = 0;
+            
+            function type() {
+                if (currentIndex < text.length) {
+                    displayText += text[currentIndex];
+                    element.textContent = displayText;
+                    currentIndex++;
+                    setTimeout(type, delay);
+                } else {
+                    // Wait before starting over
+                    setTimeout(() => {
+                        displayText = '';
+                        currentIndex = 0;
+                        type();
+                    }, 2000);
+                }
+            }
+            
+            type();
+        }
+
+        // Start the typing animation when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const typingElement = document.getElementById('typing-text');
+            const textToType = 'Proxy Manager Ditressiber Polda Jatim';
+            typeWriter(textToType, typingElement, 100);
+        });
+
+        // Initial load
+        refreshDevices();
+        loadProxies();
+
+        // Auto refresh devices every 5 seconds
+        setInterval(refreshDevices, 5000);
+        // setInterval(updateTotalProxies, 5000);
+    </script>
+    <script>
+        let previousStats = null;
+        
+        function initializeCharts() {
+            const chartOptions = {
+                series: [{
+                    data: [0]
+                }],
+                chart: {
+                    height: 100,
+                    type: 'line',
+                    animations: {
+                        enabled: true,
+                        easing: 'linear',
+                        dynamicAnimation: {
+                            speed: 1000
+                        }
+                    },
+                    toolbar: {
+                        show: false
+                    },
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                grid: {
+                    show: false
+                },
+                xaxis: {
+                    type: 'numeric',
+                    lines: {
+                        show: false
+                    },
+                    axisBorder: {
+                        show: false
+                    },
+                    labels: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        show: false
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    y: {
+                        formatter: function(value) {
+                            return formatBytes(value) + '/s';
+                        }
+                    }
+                }
+            };
+        
+            // Upload Chart
+            uploadChart = new ApexCharts(document.querySelector("#upload-chart"), {
+                ...chartOptions,
+                colors: ['#10B981'], // Green color
+            });
+            uploadChart.render();
+        
+            // Download Chart
+            downloadChart = new ApexCharts(document.querySelector("#download-chart"), {
+                ...chartOptions,
+                colors: ['#3B82F6'], // Blue color
+            });
+            downloadChart.render();
+        }
+        
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+        
+        async function updateNetworkStats() {
+            try {
+                const stats = await eel.get_network_stats()();
+                if (!stats) return;
+        
+                const uploadSpeedEl = document.getElementById('upload-speed');
+                const downloadSpeedEl = document.getElementById('download-speed');
+                const totalUploadEl = document.getElementById('total-upload');
+                const totalDownloadEl = document.getElementById('total-download');
+
+                if (!uploadSpeedEl || !downloadSpeedEl) return;
+
+                const now = new Date();
+                
+                if (previousStats) {
+                    const timeDiff = 3; // 3 seconds interval
+                    
+                    // Calculate speeds
+                    const uploadSpeed = (stats.bytes_sent - previousStats.bytes_sent) / timeDiff;
+                    const downloadSpeed = (stats.bytes_recv - previousStats.bytes_recv) / timeDiff;
+        
+                    // Update charts if they exist
+                    if (uploadChart && downloadChart) {
+                        uploadData.push(uploadSpeed);
+                        downloadData.push(downloadSpeed);
+                        
+                        if (uploadData.length > maxDataPoints) uploadData.shift();
+                        if (downloadData.length > maxDataPoints) downloadData.shift();
+
+                        uploadChart.updateSeries([{ data: uploadData }]);
+                        downloadChart.updateSeries([{ data: downloadData }]);
+                    }
+
+                    // Update speed displays
+                    uploadSpeedEl.textContent = formatBytes(uploadSpeed) + '/s';
+                    downloadSpeedEl.textContent = formatBytes(downloadSpeed) + '/s';
+                    
+                    // Update totals if elements exist
+                    if (totalUploadEl) totalUploadEl.textContent = formatBytes(stats.bytes_sent);
+                    if (totalDownloadEl) totalDownloadEl.textContent = formatBytes(stats.bytes_recv);
+                }
+        
+                previousStats = stats;
+            } catch (error) {
+                console.error('Error updating network stats:', error);
+            }
+        }
+        
+        // Initialize when document is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            
+            // Start network stats polling
+            updateNetworkStats();
+            setInterval(updateNetworkStats, 3000);
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (uploadChart) uploadChart.destroy();
+            if (downloadChart) downloadChart.destroy();
+        });
+    </script>
+    <script>
+        let autoScroll = true;
+        let logUpdateInterval;
+
+        async function updateLogs() {
+            try {
+                const logs = await eel.get_recent_logs()();
+                const logContainer = document.getElementById('log-container');
+                const autoScrollBtn = document.getElementById('auto-scroll-btn');
+                
+                if (!logContainer || !Array.isArray(logs)) return;
+
+                // Update log content
+                logContainer.innerHTML = logs.map(log => {
+                    if (!Array.isArray(log) || log.length !== 3) return '';
+                    
+                    const [timestamp, level, message] = log;
+                    const levelColors = {
+                        'ERROR': 'text-red-500',
+                        'WARNING': 'text-yellow-500',
+                        'INFO': 'text-green-500',
+                        'DEBUG': 'text-blue-500'
+                    }[level] || 'text-gray-400';
+
+                    return `
+                        <div class="font-mono py-0.5 text-sm leading-5">
+                            <span class="text-gray-400">[${timestamp}]</span>
+                            <span class="${levelColors}">[${level}]</span>
+                            <span class="text-gray-300">${message}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                // Update auto-scroll button state
+                if (autoScrollBtn) {
+                    autoScrollBtn.classList.toggle('bg-green-600', autoScroll);
+                    autoScrollBtn.classList.toggle('bg-gray-600', !autoScroll);
+                }
+
+                // Auto scroll if enabled
+                if (autoScroll) {
+                    logContainer.scrollTop = logContainer.scrollHeight;
+                }
+            } catch (error) {
+                console.error('Error updating logs:', error);
+            }
+        }
+
+        function toggleAutoScroll() {
+            autoScroll = !autoScroll;
+            const btn = document.getElementById('auto-scroll-btn');
+            if (btn) {
+                btn.innerHTML = `Auto-scroll ${autoScroll ? 'ON' : 'OFF'}`;
+                btn.classList.toggle('bg-green-600', autoScroll);
+                btn.classList.toggle('bg-gray-600', !autoScroll);
+            }
+        }
+
+        function startLogUpdates() {
+            updateLogs();
+            logUpdateInterval = setInterval(updateLogs, 1000);
+        }
+
+        function stopLogUpdates() {
+            if (logUpdateInterval) {
+                clearInterval(logUpdateInterval);
+            }
+        }
+
+        async function clearLogs() {
+            try {
+                const confirmed = await Swal.fire({
+                    title: 'Clear Logs?',
+                    text: 'Semua log akan dihapus',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Hapus',
+                    cancelButtonText: 'Batal',
+                });
+
+                if (confirmed.isConfirmed) {
+                    await eel.clear_logs()();
+                    const logContainer = document.getElementById('log-container');
+                    if (logContainer) {
+                        logContainer.innerHTML = '';
+                    }
+                    showMessage('Log berhasil dibersihkan', 'success');
+                }
+            } catch (error) {
+                console.error('Error clearing logs:', error);
+                showMessage('Gagal membersihkan log', 'error');
+            }
+        }
+
+        async function refreshLogs() {
+            await updateLogs();
+            showMessage('Logs refreshed');
+        }
+
+        // Start log updates when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            startLogUpdates();
+            
+            // Stop updates when page is hidden/closed
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    stopLogUpdates();
+                } else {
+                    startLogUpdates();
+                }
+            });
+        });
+
+        // Add custom styles for the log viewer
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                #log-container::-webkit-scrollbar {
+                    width: 8px;
+                }
+                
+                #log-container::-webkit-scrollbar-track {
+                    background: #2d2d2d;
+                }
+                
+                #log-container::-webkit-scrollbar-thumb {
+                    background: #666;
+                    border-radius: 4px;
+                }
+                
+                #log-container::-webkit-scrollbar-thumb:hover {
+                    background: #888;
+                }
+            </style>
+        `);
+    </script>
+</body>
+</html>
+
