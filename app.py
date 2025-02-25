@@ -294,7 +294,7 @@ def assign_single_proxy(device_id, proxy):
         old_proxy = proxy_manager.get_proxy_for_device(device_id)
         if old_proxy:
             proxy_manager.unassign_proxy(old_proxy)
-            run_adb_command(['shell', 'settings', 'delete', 'global', 'http_proxy'], device_id)
+            run_adb_command(['shell', 'settings', 'put', 'global', 'http_proxy', ':0'], device_id)
         
         # Check if proxy is already assigned
         if proxy in proxy_manager.assigned_proxies:
@@ -335,7 +335,7 @@ def unassign_proxy(proxy):
 def unassign_all_proxies():
     try:
         for proxy, device_id in proxy_manager.assigned_proxies.items():
-            run_adb_command(['shell', 'settings', 'delete', 'global', 'http_proxy'], device_id)
+            run_adb_command(['shell', 'settings', 'put', 'global', 'http_proxy', ':0'], device_id)
         
         proxy_manager.assigned_proxies.clear()
         proxy_manager.save_assignments()
@@ -439,7 +439,8 @@ def delete_all_device_proxies():
         
         for device in devices:
             if device['status'] == 'device':
-                result = run_adb_command(['shell', 'settings', 'delete', 'global', 'http_proxy'], device['id'])
+                # Use ":0" to disable proxy instead of delete command
+                result = run_adb_command(['shell', 'settings', 'put', 'global', 'http_proxy', ':0'], device['id'])
                 if not result or result.returncode != 0:
                     logging.error(f"Failed to delete proxy for device {device['id']}")
                     success = False
