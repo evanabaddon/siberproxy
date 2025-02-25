@@ -8,7 +8,7 @@ import psutil
 import time
 import re
 from collections import deque
-import screeninfo  # Tambahkan ini untuk mendapatkan info monitor
+import screeninfo 
 import sys
 import shutil
 from pathlib import Path
@@ -429,6 +429,29 @@ def clear_logs():
         return True
     except Exception as e:
         logging.error(f"Error clearing logs: {str(e)}")
+        return False
+
+@eel.expose
+def delete_all_device_proxies():
+    try:
+        devices = get_connected_devices()
+        success = True
+        
+        for device in devices:
+            if device['status'] == 'device':
+                result = run_adb_command(['shell', 'settings', 'delete', 'global', 'http_proxy'], device['id'])
+                if not result or result.returncode != 0:
+                    logging.error(f"Failed to delete proxy for device {device['id']}")
+                    success = False
+        
+        # Clear all assignments since we've removed all proxies
+        proxy_manager.assigned_proxies.clear()
+        proxy_manager.save_assignments()
+        
+        logging.info("Successfully deleted proxies from all devices")
+        return success
+    except Exception as e:
+        logging.error(f"Error deleting device proxies: {str(e)}")
         return False
 
 def get_center_position(width, height):
